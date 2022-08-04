@@ -6,7 +6,7 @@
     <RootNamespace>Youtube_Music_Downloader</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-  </PropertyGroup>
+   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="resources\delete.png" />
@@ -15,6 +15,10 @@
     <None Remove="resources\question-mark.png" />
     <None Remove="resources\reload.png" />
     <None Remove="resources\youtube-music-downloader.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>

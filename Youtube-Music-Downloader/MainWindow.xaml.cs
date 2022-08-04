@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,9 +16,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
+
 
 namespace Youtube_Music_Downloader {
     public partial class MainWindow : Window {
+
+        private string defaultDownloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Downloads\\";
+
 
         public MainWindow() {
             InitializeComponent();
@@ -34,7 +40,7 @@ namespace Youtube_Music_Downloader {
 
         private void initDownloadFolder() {
             if(Settings.Default.DownloadFolder == "")
-                UI_DownloadFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Downloads\\";
+                UI_DownloadFolder.Text = defaultDownloadFolder;
             else UI_DownloadFolder.Text = Settings.Default.DownloadFolder;
         }
 
@@ -47,15 +53,27 @@ namespace Youtube_Music_Downloader {
         }
 
         private void UI_OpenCurrentDownloadFolder(object sender, RoutedEventArgs e) {
-
+            Process.Start("explorer.exe", UI_DownloadFolder.Text);
         }
 
-        private void UI_ResetFolder(object sender, RoutedEventArgs e) {
-
+        private void UI_ResetDownloadFolder(object sender, RoutedEventArgs e) {
+            UI_DownloadFolder.Text = defaultDownloadFolder;
+            Settings.Default.DownloadFolder = defaultDownloadFolder;
+            Settings.Default.Save();
         }
 
         private void UI_SelectNewDownloadFolder(object sender, RoutedEventArgs e) {
+            using(var dialog = new CommonOpenFileDialog()) {
+                dialog.IsFolderPicker = true;
+                dialog.InitialDirectory = Settings.Default.DownloadFolder;
 
+                var result = dialog.ShowDialog();
+                if(result == CommonFileDialogResult.Ok) {
+                    UI_DownloadFolder.Text = dialog.FileName;
+                    Settings.Default.DownloadFolder = dialog.FileName;
+                    Settings.Default.Save();
+                }
+            }
         }
 
         private void UI_ClearDownloadList(object sender, RoutedEventArgs e) {
