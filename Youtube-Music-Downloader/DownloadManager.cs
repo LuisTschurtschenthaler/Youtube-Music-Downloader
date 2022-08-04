@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using YoutubeExplode;
+using YoutubeExplode.Common;
 using YoutubeExplode.Converter;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
@@ -52,6 +53,8 @@ namespace Youtube_Music_Downloader {
             await youtube.Videos.DownloadAsync(download.Url, audioFilePath);
 
             // Apply metadata to audio file
+            download.Status = Status.Apply_Metadata;
+
             var songInfo = new SongInfo(file, download);
             var tFile = TagLib.File.Create(audioFilePath);
             tFile.Tag.Title = songInfo.Title;
@@ -62,8 +65,26 @@ namespace Youtube_Music_Downloader {
             tFile.Tag.Year = songInfo.ReleaseYear;
             tFile.Save();
 
+            SetAlbumArt(tFile, download);
+
             download.Status = Status.Finished;
         }
 
+        private static void SetAlbumArt(TagLib.File file, Download download) {
+            var thumbnail = ThumbnailExtensions.GetWithHighestResolution(download.Video.Thumbnails);
+            if(thumbnail == null) 
+                return;
+
+            var thumbnailImage = Utils.DownloadThumbnail(thumbnail);
+            var cover = Utils.ResizeAndCropImage(thumbnail, thumbnailImage);
+
+            file.Tag.Pictures = new TagLib.IPicture[] {
+                new TagLib.Picture(cover)
+            };
+            file.Save();
+
+            File.Delete(cover);
+            File.Delete(thumbnailImage);
+        }
     }
 }

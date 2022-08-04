@@ -102,7 +102,7 @@ namespace Youtube_Music_Downloader {
 
 
                 tasks.Add(Task.Factory.StartNew(async () => {
-                    string fileName = $"{download.Artist} - {download.Title}";
+                    string fileName = $"{download.Artist.Trim()} - {download.Title.Trim()}";
 
                     foreach(var file in Directory.GetFiles(downloadFolder, "*.mp3", SearchOption.AllDirectories)) {
                         if(Path.GetFileName(file) == $"{fileName}.mp3") {

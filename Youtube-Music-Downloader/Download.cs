@@ -6,7 +6,7 @@ namespace Youtube_Music_Downloader {
 	internal enum Status {
 		Waiting,
 		Downloading,
-		Converting,
+		Apply_Metadata,
 		Finished,
 		Error,
 		Error_File_Exists
@@ -23,7 +23,6 @@ namespace Youtube_Music_Downloader {
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		private VideoId _videoID;
 		private string _artist = "";
 		private string _title = "";
 		private string _subfolder = "";
