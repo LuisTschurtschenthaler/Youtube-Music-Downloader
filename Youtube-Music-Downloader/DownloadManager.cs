@@ -1,9 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using YoutubeExplode;
+using YoutubeExplode.Converter;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 
@@ -34,7 +36,7 @@ namespace Youtube_Music_Downloader {
                     Subfolder = "",
                     Video = video,
                     VideoID = VideoId.Parse(url),
-                    Description = video.Description
+                    Url = url
                 }
             );
         }
@@ -46,12 +48,10 @@ namespace Youtube_Music_Downloader {
             // Download video
             download.Status = Status.Downloading;
             var stream = await youtube.Videos.Streams.GetManifestAsync(download.VideoID);
-            var audioStreamInfo = stream.GetAudioStreams().GetWithHighestBitrate();
-            await youtube.Videos.Streams.DownloadAsync(audioStreamInfo, audioFilePath);
+            var audioStreamInfo = stream.GetAudioOnlyStreams().GetWithHighestBitrate();
+            await youtube.Videos.DownloadAsync(download.Url, audioFilePath);
 
             // Apply metadata to audio file
-            download.Status = Status.Finishing;
-
             var songInfo = new SongInfo(file, download);
             var tFile = TagLib.File.Create(audioFilePath);
             tFile.Tag.Title = songInfo.Title;

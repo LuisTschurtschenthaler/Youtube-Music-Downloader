@@ -90,7 +90,7 @@ namespace Youtube_Music_Downloader {
 
             List<Task> tasks = new List<Task>();
             foreach(var download in downloadManager.Downloads) {
-                if(download.Status == Status.Finished)
+                if(download.Status == Status.Finished || download.Status == Status.Downloading)
                     continue;
 
                 string downloadFolder = Settings.Default.DownloadFolder + "\\";
@@ -100,8 +100,17 @@ namespace Youtube_Music_Downloader {
                 if(!Directory.Exists(downloadFolder))
                     Directory.CreateDirectory(downloadFolder);
 
+
                 tasks.Add(Task.Factory.StartNew(async () => {
                     string fileName = $"{download.Artist} - {download.Title}";
+
+                    foreach(var file in Directory.GetFiles(downloadFolder, "*.mp3", SearchOption.AllDirectories)) {
+                        if(Path.GetFileName(file) == $"{fileName}.mp3") {
+                            download.Status = Status.Error_File_Exists;
+                            return;
+                        }
+                    }
+
                     await downloadManager.StartDownload(download, downloadFolder, fileName);
                 }));
             }

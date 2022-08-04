@@ -6,7 +6,7 @@ namespace Youtube_Music_Downloader {
 	internal enum Status {
 		Waiting,
 		Downloading,
-		Finishing,
+		Converting,
 		Finished,
 		Error,
 		Error_File_Exists
@@ -64,7 +64,7 @@ namespace Youtube_Music_Downloader {
 
         public Video Video { get; set; }
         public VideoId VideoID { get; set; }
-		public string Description { get; set; }
+		public string Url { get; set; }
 
 	}
 }

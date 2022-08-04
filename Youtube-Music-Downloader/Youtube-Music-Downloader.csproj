@@ -20,7 +20,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1" />
-    <PackageReference Include="NReco.VideoConverter.LT" Version="1.1.4" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0-preview.6.22324.4" />
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
     <PackageReference Include="YoutubeExplode" Version="6.2.0" />
