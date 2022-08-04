@@ -3,10 +3,123 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Youtube_Music_Downloader"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Width="905" Height="585"
+        WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize"
+        Background="#2C2C2C" Icon="/resources/youtube-music-downloader.png" 
+        Title="Youtube-Music-Downloader" Closing="Window_Closed" MouseDown="Window_MouseDown" Name="window">
 
-    </Grid>
+    <Window.Resources>
+        <SolidColorBrush x:Key="gray" Color="#3c3c3c" />
+    </Window.Resources>
+
+    <StackPanel x:Name="UI_Stackpanel" Focusable="True">
+        <Label Content="Enter URL(s) below" FontSize="16" Foreground="White" Margin="10, 10, 0, 0"/>
+
+        <TextBox FontSize="16" Name="UI_DownloadUrls" Height="150" Margin="15, 5, 15, 5" Background="#3b3b3b" Foreground="White" BorderThickness="1" AcceptsReturn="True" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+        <WrapPanel Height="30">
+            <Button FontSize="14" Height="24" Width="120" Margin="15, 0, 5, 0" HorizontalAlignment="Left" Content="Add to download" Background="#3b3b3b" Foreground="White" Click="UI_AddToDownload" Cursor="Hand" />
+            <Label FontSize="14" Foreground="White" Content="Extension:" Margin="10, 3, 0, 0"/>
+            <ComboBox x:Name="UI_SelectExtension" Height="20" Margin="5, 0, 0, 0" FontSize="11" Cursor="Hand" SelectionChanged="UI_SelectExtensionChanged">
+                <ComboBoxItem IsSelected="True">mp3</ComboBoxItem>
+            </ComboBox>
+            <CheckBox FontSize="14" Name="UI_EmbedImage" Height="20" Margin="15, 5, 5, 0" Foreground="White" IsChecked="True">Album cover</CheckBox>
+        </WrapPanel>
+
+        <Label FontSize="16" Content="Download list" Foreground="White" Margin="10, 10, 0, 0"/>
+        <DataGrid x:Name="UI_Datagrid" FontSize="16" Height="180" Margin="15, 5, 15, 5" Background="#3b3b3b" Foreground="White" AutoGenerateColumns="False" ItemsSource="{Binding VideoData}"
+                  Focusable="True" GridLinesVisibility="All" HorizontalGridLinesBrush="{StaticResource gray}" VerticalGridLinesBrush="{StaticResource gray}" 
+                  CanUserAddRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False"
+                  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+            <DataGrid.Resources>
+                <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Background" Value="#4b4b4b" />
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="Padding" Value="5, 2, 5, 2" />
+                </Style>
+                <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Background" Value="#5b5b5b" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="Padding" Value="5, 2, 5, 2" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Interpret" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Interpret, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" 
+                                     Focusable="True" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Title" Width="315">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" 
+                                     Focusable="True" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Subfolder" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Subfolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}"
+                                     Focusable="True" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Extension" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Extension}" Style="{StaticResource TextBoxStyle}" Focusable="False" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Status" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Status, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" Focusable="False" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <WrapPanel>
+            <Button Margin="15, 5, 5, 5" Width="30" Height="30" Background="#3b3b3b" Foreground="White" Click="UI_OpenCurrentDownloadFolder" Cursor="Hand" ToolTip="Select current working folder">
+                <Image Source="/resources/folder.png" Width="24" Height="24" HorizontalAlignment="Left" Cursor="Hand" ToolTip="Your download folder" />
+            </Button>
+            <TextBox x:Name="UI_DownloadFolder" IsEnabled="False" FontSize="16" Width="250" Height="30" Margin="0, 0, 5, 0" Background="#3b3b3b" Foreground="White" BorderThickness="1" LostFocus="UI_DownloadFolder_LostFocus"
+                     VerticalContentAlignment="Center" Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+
+            <Button Height="30" Width="30" Margin="0, 0, 5, 0" Background="#3b3b3b" Foreground="White" Click="UI_ResetFolder" Cursor="Hand" ToolTip="Select current working folder">
+                <Image Source="/resources/reload.png" Width="24" Height="24" />
+            </Button>
+            <Button FontSize="18" Height="30" Width="30" Background="#3b3b3b" Foreground="White" Content="..." Click="UI_SelectNewDownloadFolder" Cursor="Hand" ToolTip="Select download folder" />
+        </WrapPanel>
+
+        <WrapPanel Margin="15, 0, 0, 0">
+            <Button Click="UI_ClearDownloadList" Height="30" Width="30" Background="#3b3b3b" Cursor="Hand" ToolTip="Clear download list">
+                <Image Source="/resources/delete.png" Width="24" Height="24" />
+            </Button>
+
+            <Button Click="UI_StartDownload" Margin="5" Height="30" Width="30" Background="#3b3b3b" Cursor="Hand" ToolTip="Start download">
+                <Image Source="/resources/download.png" Width="24" Height="24" />
+            </Button>
+        </WrapPanel>
+    </StackPanel>
 </Window>
