@@ -19,14 +19,7 @@
         <TextBox FontSize="16" Name="UI_DownloadUrls" Height="150" Margin="15, 5, 15, 5" Background="#3b3b3b" Foreground="White" BorderThickness="1" AcceptsReturn="True" 
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 
-        <WrapPanel Height="30">
-            <Button FontSize="14" Height="24" Width="120" Margin="15, 0, 5, 0" HorizontalAlignment="Left" Content="Add to download" Background="#3b3b3b" Foreground="White" Click="UI_AddToDownload" Cursor="Hand" />
-            <Label FontSize="14" Foreground="White" Content="Extension:" Margin="10, 3, 0, 0"/>
-            <ComboBox x:Name="UI_SelectExtension" Height="20" Margin="5, 0, 0, 0" FontSize="11" Cursor="Hand" SelectionChanged="UI_SelectExtensionChanged">
-                <ComboBoxItem IsSelected="True">mp3</ComboBoxItem>
-            </ComboBox>
-            <CheckBox FontSize="14" Name="UI_EmbedImage" Height="20" Margin="15, 5, 5, 0" Foreground="White" IsChecked="True">Album cover</CheckBox>
-        </WrapPanel>
+        <Button FontSize="14" Height="24" Width="120" Margin="15, 0, 5, 0" HorizontalAlignment="Left" Content="Add to download" Background="#3b3b3b" Foreground="White" Click="UI_AddToDownload" Cursor="Hand" />
 
         <Label FontSize="16" Content="Download list" Foreground="White" Margin="10, 10, 0, 0"/>
         <DataGrid x:Name="UI_Datagrid" FontSize="16" Height="180" Margin="15, 5, 15, 5" Background="#3b3b3b" Foreground="White" AutoGenerateColumns="False" ItemsSource="{Binding VideoData}"
@@ -54,10 +47,10 @@
             </DataGrid.Resources>
 
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Interpret" Width="150">
+                <DataGridTemplateColumn Header="Artist" Width="200">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Interpret, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" 
+                            <TextBox Text="{Binding Artist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" 
                                      Focusable="True" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -72,19 +65,11 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Subfolder" Width="150">
+                <DataGridTemplateColumn Header="Subfolder" Width="200">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Subfolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}"
                                      Focusable="True" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Header="Extension" Width="150">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox Text="{Binding Extension}" Style="{StaticResource TextBoxStyle}" Focusable="False" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -117,7 +102,7 @@
                 <Image Source="/resources/delete.png" Width="24" Height="24" />
             </Button>
 
-            <Button Click="UI_StartDownload" Margin="5" Height="30" Width="30" Background="#3b3b3b" Cursor="Hand" ToolTip="Start download">
+            <Button x:Name="UI_ButtonStartDownload" Click="UI_StartDownload" Margin="5" Height="30" Width="30" Background="#3b3b3b" Cursor="Hand" ToolTip="Start download">
                 <Image Source="/resources/download.png" Width="24" Height="24" />
             </Button>
         </WrapPanel>

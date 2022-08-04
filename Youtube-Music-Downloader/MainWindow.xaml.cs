@@ -2,20 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 
@@ -23,11 +13,13 @@ namespace Youtube_Music_Downloader {
     public partial class MainWindow : Window {
 
         private string defaultDownloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Downloads\\";
+        private DownloadManager downloadManager = new DownloadManager();
 
 
         public MainWindow() {
             InitializeComponent();
             initDownloadFolder();
+            UI_Datagrid.ItemsSource = downloadManager.Downloads;
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
@@ -44,11 +36,18 @@ namespace Youtube_Music_Downloader {
             else UI_DownloadFolder.Text = Settings.Default.DownloadFolder;
         }
 
-        private void UI_AddToDownload(object sender, RoutedEventArgs e) {
+        private async void UI_AddToDownload(object sender, RoutedEventArgs e) {
+            string[] urls = UI_DownloadUrls.Text.Split(new string[] { "\n", "\r", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries);
+            UI_DownloadUrls.Text = "";
+            
+            try {
+                foreach(var url in urls)
+                    await downloadManager.AddToDownload(url);
 
-        }
-
-        private void UI_SelectExtensionChanged(object sender, SelectionChangedEventArgs e) {
+                UI_Datagrid.Items.Refresh();
+            } catch(Exception ex) {
+                MessageBox.Show(ex.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
 
         }
 
@@ -80,8 +79,35 @@ namespace Youtube_Music_Downloader {
 
         }
 
-        private void UI_StartDownload(object sender, RoutedEventArgs e) {
+        private async void UI_StartDownload(object sender, RoutedEventArgs e) {
+            if(UI_Datagrid.Items.Count == 0) {
+                MessageBox.Show("There is nothing to download!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
+            UI_Datagrid.Items.Refresh();
+            UI_ButtonStartDownload.IsEnabled = false;
+
+            List<Task> tasks = new List<Task>();
+            foreach(var download in downloadManager.Downloads) {
+                if(download.Status == Status.Finished)
+                    continue;
+
+                string downloadFolder = Settings.Default.DownloadFolder + "\\";
+                if(download.Subfolder != "")
+                    downloadFolder += download.Subfolder + "\\";
+
+                if(!Directory.Exists(downloadFolder))
+                    Directory.CreateDirectory(downloadFolder);
+
+                tasks.Add(Task.Factory.StartNew(async () => {
+                    string fileName = $"{download.Artist} - {download.Title}";
+                    await downloadManager.StartDownload(download, downloadFolder, fileName);
+                }));
+            }
+
+            await Task.WhenAll(tasks);
+            UI_ButtonStartDownload.IsEnabled = true;
         }
 
         private void UI_DownloadFolder_LostFocus(object sender, RoutedEventArgs e) {
