@@ -8,12 +8,19 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using YoutubeExplode.Common;
-
+using YoutubeExplode.Playlists;
+using YoutubeExplode.Videos;
 
 namespace Youtube_Music_Downloader {
     internal class Utils {
 
 		private static readonly string tempFolder = Path.GetTempPath();
+
+
+		public static bool IsVideoUrl(string url) => (VideoId.TryParse(url) != null);
+
+		public static bool IsPlaylistUrl(string url) => (PlaylistId.TryParse(url) != null);
+
 
 		public static string DownloadThumbnail(Thumbnail thumbnail) {
 			var extension = GetFileExtensionFromUrl(thumbnail.Url);

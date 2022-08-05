@@ -168,8 +168,7 @@ namespace Youtube_Music_Downloader {
                 var itemToDelete = (Download) item.SelectedCells[0].Item;
                 downloadManager.Downloads.Remove(itemToDelete);
                 UI_Datagrid.Items.Refresh();
-            } catch(Exception ex) {
-            }
+            } catch(Exception ex) { }
         }
     }
 }
