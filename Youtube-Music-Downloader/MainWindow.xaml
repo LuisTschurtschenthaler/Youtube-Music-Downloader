@@ -22,11 +22,17 @@
         <Button x:Name="UI_ButtonAddToDownload" FontSize="14" Height="24" Width="120" Margin="15, 0, 5, 0" HorizontalAlignment="Left" Content="Add to download" Background="#3b3b3b" Foreground="White" Click="UI_AddToDownload" Cursor="Hand" />
 
         <Label FontSize="16" Content="Download list" Foreground="White" Margin="10, 10, 0, 0"/>
-        <DataGrid x:Name="UI_Datagrid" FontSize="16" Height="180" Margin="15, 5, 15, 5" Background="#3b3b3b" Foreground="White" AutoGenerateColumns="False" ItemsSource="{Binding VideoData}"
+        <DataGrid x:Name="UI_Datagrid" FontSize="16" Height="180" Margin="15, 5, 15, 5" Background="#3b3b3b" Foreground="White" ItemsSource="{Binding VideoData}"
                   Focusable="True" GridLinesVisibility="All" HorizontalGridLinesBrush="{StaticResource gray}" VerticalGridLinesBrush="{StaticResource gray}" 
                   CanUserAddRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False"
                   ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Delete" Click="MenuItem_Click" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            
             <DataGrid.Resources>
                 <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
                     <Setter Property="BorderThickness" Value="0" />

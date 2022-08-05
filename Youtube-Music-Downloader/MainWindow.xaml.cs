@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
@@ -158,5 +159,17 @@ namespace Youtube_Music_Downloader {
             UI_ButtonStartDownload.IsEnabled = true;
         }
 
+        private void MenuItem_Click(object sender, RoutedEventArgs e) {
+            var menuItem = (MenuItem) sender;
+            var contextMenu = (ContextMenu) menuItem.Parent;
+            var item = (DataGrid) contextMenu.PlacementTarget;
+
+            try { 
+                var itemToDelete = (Download) item.SelectedCells[0].Item;
+                downloadManager.Downloads.Remove(itemToDelete);
+                UI_Datagrid.Items.Refresh();
+            } catch(Exception ex) {
+            }
+        }
     }
 }
