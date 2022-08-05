@@ -16,6 +16,7 @@ namespace Youtube_Music_Downloader {
 
         public ObservableCollection<Download> Downloads { get; private set; }
         public ICollectionView VideoDataView { get; private set; }
+        public bool IsDownloading { get; private set; } = false;
 
         private YoutubeClient youtube;
 
@@ -43,18 +44,17 @@ namespace Youtube_Music_Downloader {
         }
 
         public async Task StartDownload(Download download, string downloadFolder, string fileName) {
+            IsDownloading = true;
+
             var file = $"{downloadFolder}{fileName}";
             var audioFilePath = $"{file}.mp3";
 
-            // Download video
+            // Download video as mp3
             download.Status = Status.Downloading;
-            var stream = await youtube.Videos.Streams.GetManifestAsync(download.VideoID);
-            var audioStreamInfo = stream.GetAudioOnlyStreams().GetWithHighestBitrate();
             await youtube.Videos.DownloadAsync(download.Url, audioFilePath);
 
             // Apply metadata to audio file
             download.Status = Status.Apply_Metadata;
-
             var songInfo = new SongInfo(file, download);
             var tFile = TagLib.File.Create(audioFilePath);
             tFile.Tag.Title = songInfo.Title;
@@ -68,6 +68,7 @@ namespace Youtube_Music_Downloader {
             SetAlbumArt(tFile, download);
 
             download.Status = Status.Finished;
+            IsDownloading = false;
         }
 
         private static void SetAlbumArt(TagLib.File file, Download download) {
@@ -84,7 +85,7 @@ namespace Youtube_Music_Downloader {
             file.Save();
 
             File.Delete(cover);
-            File.Delete(thumbnailImage);
+            //File.Delete(thumbnailImage);
         }
     }
 }

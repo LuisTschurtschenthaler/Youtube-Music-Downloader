@@ -23,9 +23,10 @@ namespace Youtube_Music_Downloader {
 				client.DownloadFile(thumbnail.Url, imagePath);
 
 			if(extension.Equals(".webp")) {
+				var newImagePath = imagePath.Replace("webp", "jpg");
 				var startInfo = new ProcessStartInfo() {
 					FileName = "./dwebp.exe",
-					Arguments = String.Format("{0} -o {1}", imagePath, imagePath.Replace("webp", "jpg")),
+					Arguments = String.Format("{0} -o {1}", imagePath, newImagePath),
 					CreateNoWindow = true,
 					UseShellExecute = false
 				};
@@ -35,6 +36,8 @@ namespace Youtube_Music_Downloader {
 
 				while(!process.HasExited && process.Responding)
 					Thread.Sleep(100);
+
+				return newImagePath;
 			}
 			return imagePath;
 		}
@@ -50,7 +53,6 @@ namespace Youtube_Music_Downloader {
 			var y = 0;
 
 			var croppedImage = $"{tempFolder}{Guid.NewGuid()}.jpg";
-
 			using(var sourceBitmap = new Bitmap(Image.FromFile(image), thumbnail.Resolution.Width, thumbnail.Resolution.Height)) {
 				var cropRect = new Rectangle(x, y, size.Width, size.Height);
 
@@ -68,6 +70,7 @@ namespace Youtube_Music_Downloader {
 			}
 			return croppedImage;
 		}
+
 
 		private static byte[] GetBitmapBytes(Bitmap source) {
 			var codec = ImageCodecInfo.GetImageEncoders().First(c => c.FormatID == ImageFormat.Jpeg.Guid);

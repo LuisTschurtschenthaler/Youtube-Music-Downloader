@@ -39,7 +39,8 @@ namespace Youtube_Music_Downloader {
         private async void UI_AddToDownload(object sender, RoutedEventArgs e) {
             string[] urls = UI_DownloadUrls.Text.Split(new string[] { "\n", "\r", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries);
             UI_DownloadUrls.Text = "";
-            
+            UI_ButtonAddToDownload.IsEnabled = false;
+
             try {
                 foreach(var url in urls)
                     await downloadManager.AddToDownload(url);
@@ -48,7 +49,9 @@ namespace Youtube_Music_Downloader {
             } catch(Exception ex) {
                 MessageBox.Show(ex.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-
+            finally {
+                UI_ButtonAddToDownload.IsEnabled = true;
+            }
         }
 
         private void UI_OpenCurrentDownloadFolder(object sender, RoutedEventArgs e) {
@@ -76,7 +79,20 @@ namespace Youtube_Music_Downloader {
         }
 
         private void UI_ClearDownloadList(object sender, RoutedEventArgs e) {
+            if(UI_Datagrid.Items.Count == 0) {
+                MessageBox.Show("There is nothing to delete!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            else if(downloadManager.IsDownloading) {
+                MessageBox.Show("You're currently downloading!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
+            var result = MessageBox.Show("Do you really want to clear the download list?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if(result == MessageBoxResult.OK) {
+                downloadManager.Downloads.Clear();
+                UI_Datagrid.Items.Refresh();
+            }
         }
 
         private async void UI_StartDownload(object sender, RoutedEventArgs e) {

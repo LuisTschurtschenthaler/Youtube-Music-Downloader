@@ -19,7 +19,7 @@
         <TextBox FontSize="16" Name="UI_DownloadUrls" Height="150" Margin="15, 5, 15, 5" Background="#3b3b3b" Foreground="White" BorderThickness="1" AcceptsReturn="True" 
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 
-        <Button FontSize="14" Height="24" Width="120" Margin="15, 0, 5, 0" HorizontalAlignment="Left" Content="Add to download" Background="#3b3b3b" Foreground="White" Click="UI_AddToDownload" Cursor="Hand" />
+        <Button x:Name="UI_ButtonAddToDownload" FontSize="14" Height="24" Width="120" Margin="15, 0, 5, 0" HorizontalAlignment="Left" Content="Add to download" Background="#3b3b3b" Foreground="White" Click="UI_AddToDownload" Cursor="Hand" />
 
         <Label FontSize="16" Content="Download list" Foreground="White" Margin="10, 10, 0, 0"/>
         <DataGrid x:Name="UI_Datagrid" FontSize="16" Height="180" Margin="15, 5, 15, 5" Background="#3b3b3b" Foreground="White" AutoGenerateColumns="False" ItemsSource="{Binding VideoData}"
