@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using YoutubeExplode;
 using YoutubeExplode.Common;
 using YoutubeExplode.Converter;
 using YoutubeExplode.Videos;
-using YoutubeExplode.Videos.Streams;
 
 
 namespace Youtube_Music_Downloader {
@@ -85,7 +83,7 @@ namespace Youtube_Music_Downloader {
             file.Save();
 
             File.Delete(cover);
-            //File.Delete(thumbnailImage);
+            File.Delete(thumbnailImage);
         }
     }
 }

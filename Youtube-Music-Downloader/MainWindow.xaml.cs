@@ -27,6 +27,25 @@ namespace Youtube_Music_Downloader {
         }
 
         private void Window_Closed(object sender, CancelEventArgs e) {
+            if(downloadManager.IsDownloading) {
+                MessageBox.Show("Not all downloads are finished yet!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                e.Cancel = true;
+                return;
+            }
+
+            bool areDownloadsLeft = false;
+            foreach(var download in downloadManager.Downloads) {
+                if(download.Status == Status.Waiting) {
+                    areDownloadsLeft = true;
+                    break;
+                }
+            }
+
+            if(areDownloadsLeft) {
+                var result = MessageBox.Show("You still need to download something. Do you want to close anyway?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if(result == MessageBoxResult.No)
+                    e.Cancel = true;
+            }
         }
 
 
@@ -80,7 +99,7 @@ namespace Youtube_Music_Downloader {
 
         private void UI_ClearDownloadList(object sender, RoutedEventArgs e) {
             if(UI_Datagrid.Items.Count == 0) {
-                MessageBox.Show("There is nothing to delete!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("There is nothing to clear!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             else if(downloadManager.IsDownloading) {
@@ -106,8 +125,12 @@ namespace Youtube_Music_Downloader {
 
             List<Task> tasks = new List<Task>();
             foreach(var download in downloadManager.Downloads) {
-                if(download.Status == Status.Finished || download.Status == Status.Downloading)
+                if(download.Status == Status.Finished 
+                    || download.Status == Status.Downloading
+                    || download.Status == Status.Apply_Metadata) { 
+
                     continue;
+                }
 
                 string downloadFolder = Settings.Default.DownloadFolder + "\\";
                 if(download.Subfolder != "")
@@ -135,8 +158,5 @@ namespace Youtube_Music_Downloader {
             UI_ButtonStartDownload.IsEnabled = true;
         }
 
-        private void UI_DownloadFolder_LostFocus(object sender, RoutedEventArgs e) {
-
-        }
     }
 }
