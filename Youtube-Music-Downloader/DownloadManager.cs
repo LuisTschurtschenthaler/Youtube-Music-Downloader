@@ -7,7 +7,6 @@ using System.Windows.Data;
 using YoutubeExplode;
 using YoutubeExplode.Common;
 using YoutubeExplode.Converter;
-using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
 
 
@@ -30,14 +29,13 @@ namespace Youtube_Music_Downloader {
 
         public async Task AddToDownload(string url) {
             var videoUrls = new List<string>();
-
-            if(Utils.IsPlaylistUrl(url)) {
+            
+            if(Utils.IsVideoUrl(url))
+                videoUrls.Add(url);
+            else if(Utils.IsPlaylistUrl(url)) {
                 await foreach(var playlistVideo in youtube.Playlists.GetVideosAsync(url))
                     videoUrls.Add(playlistVideo.Url);
             }
-            else if(Utils.IsVideoUrl(url))
-                videoUrls.Add(url);
-            
 
             foreach(var videoUrl in videoUrls) {
                 var video = await youtube.Videos.GetAsync(videoUrl);

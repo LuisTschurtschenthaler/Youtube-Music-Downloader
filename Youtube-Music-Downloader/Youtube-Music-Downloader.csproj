@@ -6,7 +6,20 @@
     <RootNamespace>Youtube_Music_Downloader</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <StartupObject>Youtube_Music_Downloader.App</StartupObject>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <IsPublishable>False</IsPublishable>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationIcon>resources\youtube-music-downloader.ico</ApplicationIcon>
    </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Remove="resources\delete.png" />
@@ -15,6 +28,12 @@
     <None Remove="resources\question-mark.png" />
     <None Remove="resources\reload.png" />
     <None Remove="resources\youtube-music-downloader.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\youtube-music-downloader.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

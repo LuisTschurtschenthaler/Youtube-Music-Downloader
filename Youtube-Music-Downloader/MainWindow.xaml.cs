@@ -34,7 +34,7 @@ namespace Youtube_Music_Downloader {
                 return;
             }
 
-            bool areDownloadsLeft = false;
+            var areDownloadsLeft = false;
             foreach(var download in downloadManager.Downloads) {
                 if(download.Status == Status.Waiting) {
                     areDownloadsLeft = true;
@@ -53,11 +53,12 @@ namespace Youtube_Music_Downloader {
         private void initDownloadFolder() {
             if(Settings.Default.DownloadFolder == "")
                 UI_DownloadFolder.Text = defaultDownloadFolder;
-            else UI_DownloadFolder.Text = Settings.Default.DownloadFolder;
+            else
+                UI_DownloadFolder.Text = Settings.Default.DownloadFolder;
         }
 
         private async void UI_AddToDownload(object sender, RoutedEventArgs e) {
-            string[] urls = UI_DownloadUrls.Text.Split(new string[] { "\n", "\r", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries);
+            var urls = UI_DownloadUrls.Text.Split(new string[] { "\n", "\r", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries);
             UI_DownloadUrls.Text = "";
             UI_ButtonAddToDownload.IsEnabled = false;
 
@@ -66,7 +67,8 @@ namespace Youtube_Music_Downloader {
                     await downloadManager.AddToDownload(url);
 
                 UI_Datagrid.Items.Refresh();
-            } catch(Exception ex) {
+            }
+            catch(Exception ex) {
                 MessageBox.Show(ex.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             finally {
@@ -126,20 +128,19 @@ namespace Youtube_Music_Downloader {
 
             List<Task> tasks = new List<Task>();
             foreach(var download in downloadManager.Downloads) {
-                if(download.Status == Status.Finished 
+                if(download.Status == Status.Finished
                     || download.Status == Status.Downloading
-                    || download.Status == Status.Apply_Metadata) { 
+                    || download.Status == Status.Apply_Metadata) {
 
                     continue;
                 }
 
                 string downloadFolder = Settings.Default.DownloadFolder + "\\";
-                if(download.Subfolder != "")
+                if(download.Subfolder.Length > 0)
                     downloadFolder += download.Subfolder + "\\";
 
                 if(!Directory.Exists(downloadFolder))
                     Directory.CreateDirectory(downloadFolder);
-
 
                 tasks.Add(Task.Factory.StartNew(async () => {
                     string fileName = $"{download.Artist.Trim()} - {download.Title.Trim()}";
@@ -159,16 +160,18 @@ namespace Youtube_Music_Downloader {
             UI_ButtonStartDownload.IsEnabled = true;
         }
 
+
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
             var menuItem = (MenuItem) sender;
             var contextMenu = (ContextMenu) menuItem.Parent;
             var item = (DataGrid) contextMenu.PlacementTarget;
 
-            try { 
+            try {
                 var itemToDelete = (Download) item.SelectedCells[0].Item;
                 downloadManager.Downloads.Remove(itemToDelete);
                 UI_Datagrid.Items.Refresh();
-            } catch(Exception ex) { }
+            }
+            catch { }
         }
     }
 }
