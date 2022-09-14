@@ -20,9 +20,8 @@ With the [Youtube-Music-Downloader](https://github.com/LuisTschurtschenthaler/Yo
 <br />
 
 ## Libraries used
-
-[Youtube-Explode](https://github.com/Tyrrrz/YoutubeExplode)
-[Taglib-Sharp](https://github.com/mono/taglib-sharp)
-[Newtonsoft.Json](https://www.newtonsoft.com/json)
+- [Youtube-Explode](https://github.com/Tyrrrz/YoutubeExplode)
+- [Taglib-Sharp](https://github.com/mono/taglib-sharp)
+- [Newtonsoft.Json](https://www.newtonsoft.com/json)
 
 <br />
