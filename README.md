@@ -1,8 +1,5 @@
 # Youtube-Music-Downloader ![Build status](https://github.com/wallabag/android-app/workflows/CI/badge.svg?branch=master)
 
-<img src="/images/logo.png" align="left"
-width="200" hspace="10" vspace="10">
-
 With the [Youtube-Music-Downloader](https://github.com/LuisTschurtschenthaler/Youtube-Music-Downloader/releases/tag/Music) single songs but also complete playlists can be downloaded easily.
 
 <br />
@@ -18,7 +15,7 @@ With the [Youtube-Music-Downloader](https://github.com/LuisTschurtschenthaler/Yo
 
 ## Screenshot
 
-[<img src="/images/screenshot-1.png" align="left" width="200" hspace="10" vspace="10">](/images/screenshot-1.png)
+[<img src="/images/screenshot-1.png">](/images/screenshot-1.png)
 
 <br />
 
